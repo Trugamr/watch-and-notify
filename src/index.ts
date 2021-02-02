@@ -1,9 +1,8 @@
 // Loading Environmental Variables
 import dotenv from 'dotenv'
+import { rptechAvailability } from './watchers/rptech'
 dotenv.config()
 
-const getRandomNumber = (): number => {
-  return Math.round(Math.random() * 100)
-}
-
-console.log(`Random number is ${getRandomNumber()}!`)
+rptechAvailability('https://rptechindia.in/nvidia-geforce-rtx-3060-ti.html')
+  .then(data => console.log(data))
+  .catch(error => console.log(error.message))
