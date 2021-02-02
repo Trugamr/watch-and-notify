@@ -16,6 +16,7 @@
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
     "@types/node": "^14.14.22",
+    "@types/node-cron": "^2.0.3",
     "@typescript-eslint/eslint-plugin": "^4.14.2",
     "@typescript-eslint/parser": "^4.14.2",
     "eslint": "^7.19.0",
@@ -29,6 +30,8 @@
   "dependencies": {
     "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.5",
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "node-cron": "^2.0.3",
+    "telegraf": "^4.0.2"
   }
 }
