@@ -2,35 +2,37 @@
 import dotenv from 'dotenv'
 dotenv.config()
 
+import { Notifier } from './notifiers/notifier.types'
+
+// Start Telegram BOT
+import './bots/telegram.bot'
+
 // Import watchers
 import { rptechWatcher } from './watchers/rptech'
 
-// Start Telegram BOT
-import './notifiers/telegram'
+// Import notifiers
 import { telegramNotifier } from './notifiers/telegram'
 
 // Other Imports
 import cron from 'node-cron'
-import { Notifier } from './notifiers/notifier.types'
-import { Links } from './links.types'
 
-const links: Links = {
-  rptech: [
-    'https://rptechindia.in/nvidia-geforce-rtx-3060-ti.html',
-    'https://rptechindia.in/catalog/product/view/id/406/s/igame-graphic-card-geforce-rtx-2080-ti-advanced-oc-v-iggfrtx2080tiadvoc/',
-  ],
-}
+// Import db
+import db from './db'
 
 const notifiers: Notifier[] = [telegramNotifier]
 
 // Start watching and notifying,
 // Runs every watcher every 30 seconds and notifies if product is available
 cron.schedule('*/30 * * * * *', () => {
-  if (links.rptech) {
-    links.rptech.forEach(async link => {
-      const availability = await rptechWatcher(link)
-      if (availability.available)
-        notifiers.forEach(notify => notify(availability))
-    })
-  }
+  const rptechProducts = db
+    .get('products')
+    .filter(({ site }) => site === 'rptech')
+    .value()
+
+  rptechProducts.forEach(async product => {
+    const availability = await rptechWatcher(product)
+    if (availability.available) {
+      notifiers.forEach(notify => notify(availability))
+    }
+  })
 })

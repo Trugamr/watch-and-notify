@@ -1,0 +1,36 @@
+{
+  "users": {
+    "433196535": {
+      "id": 433196535,
+      "first_name": "tru ^_^",
+      "username": "trugamr",
+      "type": "private",
+      "platform": "telegram",
+      "products": [
+        "1"
+      ]
+    },
+    "484554311": {
+      "id": 484554311,
+      "first_name": "Sidhu",
+      "type": "private",
+      "platform": "telegram",
+      "products": []
+    }
+  },
+  "notifications": [],
+  "products": [
+    {
+      "site": "rptech",
+      "name": "RTX 3060 Ti FE",
+      "url": "https://rptechindia.in/nvidia-geforce-rtx-3060-ti.html",
+      "id": "1"
+    },
+    {
+      "site": "rptech",
+      "name": "RTX 2080 Ti",
+      "url": "https://rptechindia.in/catalog/product/view/id/406/s/igame-graphic-card-geforce-rtx-2080-ti-advanced-oc-v-iggfrtx2080tiadvoc/",
+      "id": "2"
+    }
+  ]
+}

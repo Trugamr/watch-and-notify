@@ -1,27 +1,37 @@
-import { Telegraf } from 'telegraf'
+import { telegramBOT } from '../bots/telegram.bot'
 import { Availability } from '../watchers/watcher.types'
-
-const TOKEN = process.env.TELEGRAM_BOT_TOKEN as string
-const TELEGRAM_USER_ID = process.env.TELEGRAM_USER_ID as string
-
-const bot = new Telegraf(TOKEN)
-
-bot.command('me', ctx => {
-  ctx.reply(JSON.stringify(ctx.chat, null, 2))
-})
-
-bot.launch()
+import db from '../db'
 
 export const telegramNotifier = (availability: Availability): void => {
-  const { productName, price, link } = availability
+  const { product, price } = availability
 
-  const message = `*${productName}* is available to buy for *${price?.toLocaleString(
-    'en-IN',
-  )}* right now!
-[Visit Product Page](${link})
+  const message = `*${
+    product.name
+  }* is available to buy for *${price?.toLocaleString('en-IN')}* right now!
+[Visit Product Page](${product.url})
   `
+  const usersToNotify = db
+    .get('users')
+    .filter(
+      ({ platform, products }) =>
+        platform === 'telegram' && products.includes(product.id),
+    )
+    .value()
 
-  bot.telegram.sendMessage(TELEGRAM_USER_ID, message, {
-    parse_mode: 'Markdown',
-  })
+  const notificationPromises = usersToNotify.map(({ id }) =>
+    telegramBOT.telegram.sendMessage(id, message, {
+      parse_mode: 'Markdown',
+    }),
+  )
+
+  Promise.all(notificationPromises)
+    .then(() =>
+      console.log(`Everyone notified successfully about ${product.name}.`),
+    )
+    .catch(error =>
+      console.error(
+        `Failed to notify some people about ${product.name}.`,
+        error.message,
+      ),
+    )
 }

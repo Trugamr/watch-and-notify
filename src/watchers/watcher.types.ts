@@ -1,9 +1,10 @@
+import { Product } from '../types'
+
 export interface Availability {
-  link: string
-  productName: string
+  product: Product
   available: boolean
   price?: number
   image?: string
 }
 
-export type Watcher = (link: string) => Promise<Availability> | Availability
+export type Watcher = (product: Product) => Promise<Availability> | Availability

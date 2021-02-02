@@ -1,4 +1,5 @@
 import cheerio from 'cheerio'
+import { Product } from '../types'
 import { getPageSource } from '../utils'
 import { Availability, Watcher } from './watcher.types'
 
@@ -7,9 +8,9 @@ import { Availability, Watcher } from './watcher.types'
  * @param itemLink Link to item from RPtech website
  */
 export const rptechWatcher: Watcher = async (
-  link: string,
+  product: Product,
 ): Promise<Availability> => {
-  const data = await getPageSource(link)
+  const data = await getPageSource(product.url)
   const $ = cheerio.load(data)
 
   const productName = $('.product-title').text().trim()
@@ -19,8 +20,10 @@ export const rptechWatcher: Watcher = async (
   const image = $('img[src]#zoom_03').attr('src')
 
   return {
-    link,
-    productName,
+    product: {
+      ...product,
+      name: productName,
+    },
     available: status === 'In stock',
     price: price ? parseFloat(price) : undefined,
     image,
